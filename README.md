@@ -4,12 +4,12 @@ This repository contains Matlab codes accompanying the paper [``A convex analysi
 
 If you find this approach useful, you can cite the paper as
 
-@techreport{multimaterialcontrol,
-    author = {Christian Clason and Karl Kunisch},
-    title = {A convex analysis approach to multi-material topology optimization},
-    number = {SFB-Report 2015--011},
-    institution = {{SFB ``Mathematical Optimization and Applications in Biomedical Sciences''}},
-    url = {http://math.uni-graz.at/mobis/publications/SFB-Report-2015-011.pdf},
-    year = {2015}
-}
+    @techreport{multimaterialcontrol,
+        author = {Christian Clason and Karl Kunisch},
+        title = {A convex analysis approach to multi-material topology optimization},
+        number = {SFB-Report 2015--011},
+        institution = {{SFB ``Mathematical Optimization and Applications in Biomedical Sciences''}},
+        url = {http://math.uni-graz.at/mobis/publications/SFB-Report-2015-011.pdf},
+        year = {2015}
+    }
 
