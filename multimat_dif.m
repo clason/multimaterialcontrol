@@ -1,5 +1,5 @@
 function multimat_dif
-% This function solves the nonlinear multibang control problem
+% This function solves the multimaterial topology optimization problem
 %  min 1/2 \|y-yd\|^2 +
 %    alpha/2\sum_i\int((u_i+u_{i+1})u(x)-u_iu_{i+1})\chi_{[u_i,u_{i+1}]}
 %      s.t. -\div(Gu \grad y) = f, u_1 <= u(x) <= u_d
@@ -8,7 +8,7 @@ function multimat_dif
 % by Christian Clason and Karl Kunisch, see
 % http://math.uni-graz.at/mobis/publications/SFB-Report-2015-011.pdf.
 %
-% June 1, 2015               Christian Clason <christian.clason@uni-due.de>
+% January 14, 2016           Christian Clason <christian.clason@uni-due.de>
 %                                                     http://udue.de/clason
 
 %% setup
@@ -26,6 +26,7 @@ x       = linspace(-1,1,N)';     % spatial grid points (uniform in x,y)
 h       = (x(2)-x(1));           % grid size
 N2      = N*N;
 tplot = @(n,f,s) tplot_(n,f,s,N,xx,yy);
+dplot = @(n,f,s) dplot_(n,f,s,N,xx,yy,ub);
 
 % operators (first-order finite differences)
 I  = speye(N2,N2);
@@ -52,21 +53,24 @@ f = 10+0*xx(:);  f(bnod)=0;
 
 % target obtained from reference coefficient
 ue = 1.5+(xx.^2+yy.^2 < 3/4).*(xx.^2+yy.^2 > 1/4).*(xx>1/10)...
-    +(xx.^2+yy.^2 < 3/4).*(xx.^2+yy.^2 > 1/4).*(xx<-1/10);
+        +(xx.^2+yy.^2 < 3/4).*(xx.^2+yy.^2 > 1/4).*(xx<-1/10);
 z  = bc(DT*mvc(G*ue(:))*D)\f;
-tplot(1,ue,'reference');
+dplot(1,G*ue(:),'reference');
 tplot(2,z,'target');
 
 %% compute control
 % initialize iterates
-y  = zeros(N2,1);                 % state variable
-p  = zeros(N2,1);                 % dual variable
+y  = randn(N2,1);                 % state variable
+p  = randn(N2,1);                 % adjoint state variable
 as = zeros(2*d-1,N2);             % active sets
 
 % continuation
 gamma = 1;
 while gamma > 1e-12
     fprintf('\nCompute solution for gamma = %1.3e:\n',gamma);
+    fprintf('It\tupdate\t\tresidual\tstep size\n');
+
+    % semismooth Newton iteration
     it = 1;    nold = 1e99;    tau = 1;    tflag = '';
     ga = 1+2*gamma/alpha;
     while true
@@ -139,7 +143,7 @@ while gamma > 1e-12
     % check convergence
     if it < maxit                      % converged: accept iterate
         u = He;                        % compute control from dual iterate
-        tplot(3,G*u,'coefficient');    % plot coefficient
+        dplot(3,G*u,'coefficient');    % plot coefficient
         regnodes = nnz(as(d+1:end,:)); % number of nodes in Q_i,i+1^gamma
         fprintf('Solution has %i node(s) in regularized active sets\n',regnodes);
         gamma = gamma/2;               % reduce gamma
@@ -151,7 +155,7 @@ while gamma > 1e-12
 end % continuation
 
 %% plot results
-tplot(3,G*u,'coefficient');
+dplot(3,G*u,'coefficient');
 tplot(4,y,'state');
 red_cost  = (norm(ue(:))-norm(u(:)))/norm(ue(:)); % relative reduction in control cost
 red_track = norm(y(:)-z(:))/norm(z(:));           % relative reduction in tracking cost
@@ -167,3 +171,14 @@ shading interp; lighting phong; camlight headlight; alpha(0.8);
 title(s); xlabel('x_1'); ylabel('x_2');
 drawnow;
 end % tplot_ function
+
+
+function dplot_(n,f,s,N,x,y,ub)
+figure(n);
+pcolor(x,y,reshape(f,N,N));
+shading flat;
+title(s); xlabel('x_1'); ylabel('x_2');
+colorbar('Limits',[ub(1),ub(end)],'Ticks',ub); caxis([ub(1) ub(end)]);
+drawnow;
+end % dplot_ function
+
