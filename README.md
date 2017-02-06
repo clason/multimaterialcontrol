@@ -8,7 +8,9 @@ If you find this approach useful, you can cite the paper as
         author = {Christian Clason and Karl Kunisch},
         title = {A convex analysis approach to multi-material topology optimization},
         journal = {ESAIM: Mathematical Modelling and Numerical Analysis},
-        volume = {forthcoming},
+        volume = {50},
+        number = {6},
+        pages = {1917--1936}
         year = {2016},
         doi = {10.1051/m2an/2016012}
     }
