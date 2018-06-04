@@ -1,6 +1,6 @@
 # multimaterialcontrol
 
-This repository contains Matlab codes accompanying the paper [``A convex analysis approach to multi-material topology optimization``](https://www.uni-due.de/~adf040p/preprints/MultiMaterialControl.pdf) by [Christian Clason](http://udue.de/clason) and [Karl Kunisch](http://www.uni-graz.at/~kunisch).
+This repository contains Matlab codes accompanying the paper [``A convex analysis approach to multi-material topology optimization``](https://arxiv.org/abs/1702.07525) by [Christian Clason](http://udue.de/clason) and [Karl Kunisch](http://www.uni-graz.at/~kunisch).
 
 If you find this approach useful, you can cite the paper as
 
